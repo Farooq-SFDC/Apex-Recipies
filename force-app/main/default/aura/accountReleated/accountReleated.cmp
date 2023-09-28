@@ -1,0 +1,19 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" controller="Assignment_testController" access="global" >
+    <aura:attribute name="fields" type="String"/>
+    <aura:attribute name="Acc" type="List" default="[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+        <thead>
+            <th>Account Name</th>
+            <th>Active Account</th>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.Acc}" var="acc">
+                <tr class="slds-line-height_reset">
+                    <td class="" scope="col">{!acc.Name}</td>
+                    <td class="" scope="col">{!acc.Active__c}</td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+</aura:component>

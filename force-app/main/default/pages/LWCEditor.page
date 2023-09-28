@@ -1,0 +1,128 @@
+<apex:page showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" >
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ace.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/mode-javascript.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/mode-html.js">
+    </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ext-language_tools.js">
+    </script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/mode-java.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/snippets/html.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/snippets/javascript.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/theme-twilight.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/mode-css.js">
+    </script>
+  
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ext-beautify.js">
+    </script>
+
+    <style type="text/css" media="screen">
+        #editor { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        }
+    </style>
+    
+    
+    <div id="editor"></div>
+    <script>
+    window.onload=init();
+    let origin='https://{!$Label.DomainName}-dev-ed.lightning.force.com';
+    
+    function init(){
+        ace.require("ace/ext/language_tools");
+        let editor = ace.edit("editor");
+        editor.setTheme("ace/theme/twilight");
+        editor.setFontSize("18px");
+        editor.commands.addCommand({
+            name: 'fullscrenn',
+            bindKey: {win: "Alt-Shift-F", "mac": "Alt-Shift-F"},
+            exec: function(editor) {
+                let message={}
+                 message.type='fullscreen';
+                 parent.postMessage(message, origin);
+            }
+        })
+        editor.commands.addCommand({
+            name: 'save',
+            bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
+            exec: function(editor) {
+                let message={}
+                 message.type='save';
+                 message.soruce= editor.session.getValue();
+                
+                 parent.postMessage(message, origin);
+            }
+        })
+        editor.commands.addCommand({
+            name: 'beautify',
+            bindKey: {win: "Shift-Tab", "mac": "Cmd-Tab"},
+            exec: function(editor) {
+              let beautify = ace.require("ace/ext/beautify"); // get reference to extension
+              beautify.beautify(editor.session);
+            }
+        })
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: false
+        });
+        window.addEventListener("message", function(event) {
+            
+            if (event.origin !== origin) {
+                console.log('Add To whitlisting',event.origin);
+                // Not the expected origin: reject message!
+                return;
+            }
+            if(!event.data){
+                return
+            }
+            let data=event.data;
+            let editor = ace.edit("editor");
+            editor.setTheme("ace/theme/twilight");
+    
+            if(data.mode=='js'){
+                editor.session.setMode("ace/mode/javascript");
+            }
+            if(data.mode=='html'){
+                editor.session.setMode("ace/mode/html");
+            }
+            if(data.mode=='css'){
+               editor.session.setMode("ace/mode/css");
+            }
+            
+            
+             editor.getSession().setValue(data.code);
+
+            
+            
+        }); 
+        
+     editor.on('change', function (e) {
+
+         let editor = ace.edit("editor");
+         let x= editor.getSession().getValue();
+         let message={}
+         message.type='code';
+         message.soruce=x;
+         parent.postMessage(message, origin);
+         
+        });
+        
+        
+    }
+    
+    
+    
+    
+    </script>
+</apex:page>
