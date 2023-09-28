@@ -4,5 +4,6 @@
     "**/bower_components": true,
     "**/.sfdx": true
   },
-  "salesforcedx-vscode-slds.enhancements.autoSuggest": true
+  "salesforcedx-vscode-slds.enhancements.autoSuggest": true,
+  "salesforcedx-vscode-core.show-cli-success-msg": false
 }
