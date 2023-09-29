@@ -1,0 +1,19 @@
+<template>
+    <lightning-card
+        title="WireGetRecordsDifferentTypes"
+        icon-name="custom:custom67"
+    >
+        <div class="slds-var-m-horizontal_medium">
+            <template lwc:if={recordResults.data}>
+                <div class="scroller">
+                    <pre>{recordStr}</pre>
+                </div>
+            </template>
+            <template lwc:else>
+                NO Data
+                </template>
+           
+        </div>
+    
+    </lightning-card>
+</template>
